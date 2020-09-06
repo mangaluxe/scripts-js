@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pourcentage rempli</title>
+    <style>
+        .myinput {margin-bottom:15px}
+        .bar-container {
+            width:300px;
+            background-color:#f0e8e8;
+        }
+        #bar {
+            height:5px;
+            background-color:#b81515;
+            width:0%; /* width par défaut */
+            transition:0.3s;
+        }
+
+
+        .p1, .p2, .p3 {display: none} /* Par défaut */
+        .p1.active, .p2.active, .p3.active {display: block} /* Quand c'est active */
+        
+        .link.active {color: #d62d2d}
+        button a {
+            text-decoration: none;
+            color:#000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="link-container"><a href="javascript:void(0)" data-target="p1" id="p1" class="link active">Page 1</a> - <a href="javascript:void(0)" data-target="p2" id="p2" class="link">Page 2</a> - <a href="javascript:void(0)" data-target="p3" id="p3" class="link">Page 3</a></div><br>
+
+    <form method="post" enctype="multipart/form-data">
+        <!-- S'il y a un input de type="file", ne pas oublier de préciser enctype="multipart/form-data" -->
+
+        <div class="p1 active">
+            Civilité : <label for="genre_m"><input name="genre" value="men" type="radio" id="genre_m" class="myinput">Monsieur</label>
+            <label for="genre_f"><input name="genre" value="women" type="radio" id="genre_f" class="myinput">Madame</label><br>
+    
+            <label for="nom">Nom : <input type="text" name="nom" id="nom" class="myinput"></label>
+    
+            <label for="prenom">Prénom : <input type="text" name="prenom" id="prenom" class="myinput"></label><br>
+    
+            <label for="profession">Profession ou fonction : <input type="text" name="profession" id="profession" class="myinput"></label>
+            
+            <label for="email">Email : <input type="email" name="email" id="email" class="myinput"></label><br>
+    
+            <label for="password">Mot de passe : <input type="password" name="password" id="password" class="myinput"></label>
+            
+            <label for="password2">Confirmez votre mot de passe : <input type="password" name="password2" id="password2" class="myinput"></label><br>
+    
+            Avez-vous des salariés ? <label for="salaried-yes"><input name="salaried" value="salaried-yes" type="radio" id="salaried-yes" class="myinput">Oui</label>
+            <label for="salaried-no"><input name="salaried" value="salaried-no" type="radio" id="salaried-no" class="myinput">Non</label><br>
+    
+            <label for="codeprofession">Code profession :
+            <select name="codeprofession" id="codeprofession" class="myinput">
+                <option value=""></option>
+                <option value="1334">1234</option>
+                <option value="4567">4567</option>
+                <option value="6789">6789</option>
+            </select>
+            </label>
+    
+            <label for="juridique">Forme juridique :
+            <select name="juridique" id="juridique" class="myinput">
+                <option value=""></option>
+                <option value="sas">SAS</option>
+                <option value="sasu">SASU</option>
+                <option value="sarl">SARL</option>
+                <option value="eurl">EURL</option>
+            </select>
+            </label><br>
+
+            <button><a href="javascript:void(0)" data-target="p2" class="link">Page suivante</a></button>
+        </div>
+    
+
+        <div class="p2">
+            <label for="profession">Type de profession :
+            <select name="profession" id="profession" class="myinput">
+                <option value=""></option>
+                <option value="artisant">Artisant</option>
+                <option value="cadre">Cadre</option>
+                <option value="ouvrier">Ouvrier</option>
+            </select>
+            </label><br>
+            
+            <label for="don">Don : <input type="number" name="don" id="don" class="myinput"></label><br>
+    
+            <label for="materiel">Don matériel : <input type="text" name="materiel" id="materiel" class="myinput"></label><br>
+    
+            <label for="bulletin">Bulletin d’adhésion : <input type="file" name="bulletin" id="bulletin" class="myinput"></label><br>
+    
+            <label for="charte">Charte d’adhésion : <input type="file" name="charte" id="charte" class="myinput"></label><br>
+    
+            <label for="photo">Photo d’identité : <input type="file" name="photo" id="photo" class="myinput"></label><br>
+
+            <button><a href="javascript:void(0)" data-target="p3" class="link">Page suivante</a></button>
+        </div>
+    
+
+        <div class="p3">
+            <label for="enfants">Nombre d’enfants : <input type="number" name="enfants" id="enfants" class="myinput"></label><br>
+    
+            <label for="animaux">Nombre d’animaux : <input type="number" name="animaux" id="animaux" class="myinput"></label><br>
+    
+            <label for="films">Films préférés : <input type="text" name="films" id="films" class="myinput"></label><br>
+    
+            <label for="musique">Musique préférée : <input type="text" name="musique" id="musique" class="myinput"></label><br>
+
+            <button>Envoyer</button>
+        </div>
+
+    </form>
+
+
+    <br>
+    <div class="bar-container">
+        <div id="bar"></div>
+    </div>
+    <p>Completé à <span id="pourcentage">0</span> % (Etape <span id="etape">0</span>/<span id="total_etape"></span>)</p>
+
+
+
+
+    <script>
+
+        // =================================================== Pourcentage progression ===================================================
+
+        // Pour faciliter la sélection, on ajoute une class à chaque input. Il suffit alors de viser la class="myinput" en faisant une boucle :
+
+        let i,
+            champ;
+        let listechamps = document.getElementsByClassName("myinput"); // S'il y a plusieurs formulaires : document.forms[0].getElementsByClassName("myinput")
+
+
+        // ----- Calculer nb de questions : -----
+        
+        let total = 0;
+        let lastname = "";
+
+        console.log(listechamps.length); // Donne le nombre d'inputs
+
+        for (i = 0; i < listechamps.length; i++) {
+
+            champ = listechamps[i];
+
+            if (lastname !== champ.name) {
+                total++;
+            }
+
+            lastname = champ.name;
+        }
+
+        document.getElementById("total_etape").innerText = total;
+
+
+        // ----- Fonction appelée à chaque event : -----
+
+        function checkValue(event) {
+
+            let rempli = 0,
+                pourcent = 0;
+            
+            listechamps = event.currentTarget.form.getElementsByClassName("myinput"); // On peut aussi utiliser querySelectorAll(".myinput")
+
+            for (i = 0; i < listechamps.length; i++) {
+
+                champ = listechamps[i];
+
+                // Incrémente à chaque case remplie :
+                if ( (champ.type === "radio" && champ.checked) || (champ.type === "text" && champ.value !== "") || (champ.type === "number" && champ.value !== "") || (champ.type === "email" && champ.value !== "") || (champ.type === "password" && champ.value !== "") || (champ.type === "file" && champ.value !== "") || (champ.tagName === "SELECT" && champ.selectedIndex !== 0) ) {
+
+                    rempli++;
+                    pourcent = Math.round( rempli*100 / total );
+
+                    // console.log(pourcent);
+                }
+            }
+
+            document.getElementById("pourcentage").innerText = pourcent; // Affiche pourcentage de progression
+            document.getElementById("bar").style.width = pourcent+"%"; // Affiche barre de progression
+            document.getElementById("etape").innerText = rempli; // Affiche étape
+
+        }
+
+
+        // ----- Appel à la fonction : -----
+
+        for (i = 0; i < listechamps.length; i++) {
+            listechamps[i].addEventListener('input', checkValue);
+        }
+
+
+
+        // =================================================== Bloc actif / Lien actif ===================================================
+
+        function functDisplay() {
+
+            // ----- Bloc actif : -----
+
+            document.querySelector("form .active").classList.remove("active"); // On vise bêtement la class active pour retirer sa class. Marche aussi avec getElementsByClassName("active")[0]
+            document.getElementsByClassName(this.getAttribute("data-target"))[0].classList.add("active"); // On récupère la valeur de data-target du lien cliqué et on l'utilise pour viser la class qui va devenir active. Cela marche parce que j'ai mis les mêmes noms pour "id du lien cliqué et "class du bloc à activer".
+
+            // ----- Lien actif : -----
+
+            document.querySelector(".link-container .active").classList.remove("active");
+            document.querySelector(".link-container #"+this.getAttribute("data-target")).classList.add("active");
+
+        }
+
+        // document.getElementById("p1").addEventListener("click", functDisplay);
+        // document.getElementById("p2").addEventListener("click", functDisplay);
+        // document.getElementById("p3").addEventListener("click", functDisplay);
+
+        // Pour ne pas répéter :
+        let link = document.getElementsByClassName("link");
+        for (i = 0; i < link.length; i++) {
+            link[i].addEventListener("click", functDisplay);
+        }
+    
+    </script>
+
+</body>
+</html>

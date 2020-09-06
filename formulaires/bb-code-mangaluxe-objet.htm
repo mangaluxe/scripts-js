@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BB Code</title>
+    <style>
+        * {box-sizing: border-box;}
+        body {
+            font: 1em Verdana, sans-serif;
+            background-color: #c5daf5;
+            margin: 20px;
+        }
+        .inline-block {display: inline-block;}
+        .relative {position: relative;}
+
+        /* input[type="text"],
+        input[type="number"], */
+        select {
+            border: 1px solid #4caee2;
+            border-radius: 10px;
+            padding: 9px 12px;
+            font: 1em Verdana, sans-serif;
+			outline: none;
+            margin-top: 8px;
+        }
+
+        select {
+            padding: 6px 22px 6px 10px; /* On met plus de padding à droite pour y insérer la flèche */
+
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            appearance: none; /* Cacher la flèche de select */
+        }
+
+        .arrow-down:after {
+			color: #4caee2;
+			content: "\25BC"; /* ▼ */
+			font-size: .8em;
+			position: absolute;
+			pointer-events: none; /* Sans cela, il est impossible de cliquer à cette endroit */
+			right: 6px;
+			top: 16px;
+        }
+
+        textarea {
+            border: 1px solid #4487be;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font: 1em Verdana, sans-serif;
+            width: 100%;
+            height: 10em;
+            outline: none;
+            margin-top: 8px;
+        }
+        
+        .bbkeypad > span {
+            background-color: #4487be;
+            color: white;
+            border-radius: 5px;
+            padding: 4px 7px 5px;
+            min-width: 3em;
+            border: none;
+            cursor: pointer;
+			font: .8em Verdana, sans-serif;
+            margin-top: 15px;
+            text-align: center;
+            display: inline-block;
+            /* box-shadow: 0 4px #acabab; */
+        }
+
+        /* Quand on presse une touche */
+        /* .bbkeypad > span:active {
+            transform: translateY(2px);
+        } */
+    </style>
+</head>
+<body>
+
+    <div id="bbkeypad1">
+        <div class="bbkeypad">
+
+            <span class="bbtag" data-tag="strong">strong</span>
+            <span class="bbtag" data-tag="em">em</span>
+    
+            <span class="bbtag" data-tag="span" data-tag2="b">B</span>
+            <span class="bbtag" data-tag="span" data-tag2="i">I</span>
+            <span class="bbtag" data-tag="span" data-tag2="u">U</span>
+            <span class="bbtag" data-tag="div" data-tag2="center">Centrer</span>
+            <span class="bbtag" data-tag="div" data-tag2="right">À droite</span>
+            <span class="bbtag" data-tag="div" data-tag2="spoiler">Spoiler</span>
+    
+            <span class="bbsymbol" data-tag='• '>•</span>
+            <span class="bbsymbol" data-tag='🥚'>🥚</span>
+            <span class="bbsymbol" data-tag='quote'>“ ”</span>
+    
+            <span class="image">Image</span>
+            <span class="link">Lien</span>
+    
+            <span class="bbtag" data-tag="div">Div</span>
+            <span class="bbtag" data-tag="ul">Liste</span>
+    
+            <div class="relative">
+                <label for="title" class="inline-block">Titre :</label>
+                <div class="relative inline-block">
+                    <select class="title">
+                        <option value=""></option>
+                        <option value="h1">Titre 1</option>
+                        <option value="h2">Titre 2</option>
+                        <option value="h3">Titre 3</option>
+                        <option value="h4">Titre 4</option>
+                    </select>
+                    <div class="arrow-down"></div>
+                </div>
+            </div>
+    
+        </div>
+    
+        <textarea class="code-out"></textarea>
+    </div>
+
+
+    <br><br><br>
+
+
+    <div id="bbkeypad2">
+        <div class="bbkeypad">
+
+            <span class="bbtag" data-tag="strong">strong</span>
+            <span class="bbtag" data-tag="em">em</span>
+    
+            <span class="bbtag" data-tag="span" data-tag2="b">B</span>
+            <span class="bbtag" data-tag="span" data-tag2="i">I</span>
+            <span class="bbtag" data-tag="span" data-tag2="u">U</span>
+            <span class="bbtag" data-tag="div" data-tag2="center">Centrer</span>
+            <span class="bbtag" data-tag="div" data-tag2="right">À droite</span>
+            <span class="bbtag" data-tag="div" data-tag2="spoiler">Spoiler</span>
+    
+            <span class="bbsymbol" data-tag='• '>•</span>
+            <span class="bbsymbol" data-tag='🥚'>🥚</span>
+            <span class="bbsymbol" data-tag='quote'>“ ”</span>
+    
+            <span class="image">Image</span>
+            <span class="link">Lien</span>
+    
+            <span class="bbtag" data-tag="div">Div</span>
+            <span class="bbtag" data-tag="ul">Liste</span>
+    
+            <div class="relative">
+                <label for="title" class="inline-block">Titre :</label>
+                <div class="relative inline-block">
+                    <select class="title">
+                        <option value=""></option>
+                        <option value="h1">Titre 1</option>
+                        <option value="h2">Titre 2</option>
+                        <option value="h3">Titre 3</option>
+                        <option value="h4">Titre 4</option>
+                    </select>
+                    <div class="arrow-down"></div>
+                </div>
+            </div>
+    
+        </div>
+    
+        <textarea class="code-out"></textarea>
+    </div>
+
+
+
+    <script>
+
+        let i, allText, startSelect, endSelect, before, after, selection, codeOut;
+
+        class BBCode {
+
+            /**
+            * @param {HTMLElement} element
+            */
+            constructor (element) {
+                this.element = element;
+
+                /* --- Appel aux fonctions au chargement --- */
+
+                this.clic(); // Ecouteurs d'événements sur les boutons
+            }
+
+            /* Dans une class, il n'y aura pas de conflit si on utilise un nom de méthode (fonction) déjà utilisé dans une autre class */
+
+
+            /* ----- Ajouts ----- */
+
+            // <h1> ou <div class=""></div>
+            addBBCode(tag, param) {
+                codeOut = this.element.querySelector('.code-out');
+                allText = codeOut.value;
+                
+                startSelect = codeOut.selectionStart; // selectionStart() sélectionne le début
+                endSelect = codeOut.selectionEnd;
+                
+                before = allText.substring(0, startSelect); // substring() affiche de l'indice début à l'indice fin. Exemple : str.substring(1, 3); // Affiche entre index 1 et 3
+                selection = allText.substring(startSelect, endSelect);
+                after = allText.substring(endSelect, allText.length);
+
+                if (tag === 'div' && param === null) { /* Exemple : <div><div></div></div> */
+                    codeOut.value = before + '<' + tag + '>\n  <div>' + selection + '</div>\n  <div></div>\n</' + tag + '>' + after;
+                }
+                else if (tag === 'ul' && param === null) { /* Exemple : <ul><li></li></ul> */
+                    codeOut.value = before + '<' + tag + '>\n  <li>' + selection + '</li>\n</' + tag + '>' + after;
+                }
+                else if (param === null) { /* Exemple: <strong></strong> ou <h1></h1> */
+                    codeOut.value = before + '<' + tag + '>' + selection + '</' + tag + '>' + after;
+                }
+                else { /* Exemple: <div class="b"></div> */
+                    codeOut.value = before + '<' + tag + ' class="' + param + '">' + selection + '</' + tag + '>' + after;
+                }
+            }
+
+            // Symboles : “ ” •
+            addSymbol(tag) {
+                codeOut = this.element.querySelector('.code-out');
+                allText = codeOut.value;
+
+                startSelect = codeOut.selectionStart;
+                endSelect = codeOut.selectionEnd;
+                
+                before = allText.substring(0, startSelect);
+                selection = allText.substring(startSelect, endSelect);
+                after = allText.substring(endSelect, allText.length);
+
+                if (tag === 'quote') { /* guillemet “ ” */
+                    codeOut.value = before + '“' + selection + '”' + after;
+                }
+                else {
+                    codeOut.value = before + tag + after;
+                }
+            }
+
+            // Image ou Lien
+            addBBCode2(tag, param, param2) {
+                codeOut = this.element.querySelector('.code-out');
+                allText = codeOut.value;
+                
+                startSelect = codeOut.selectionStart;
+                endSelect = codeOut.selectionEnd;
+                
+                before = allText.substring(0, startSelect);
+                selection = allText.substring(startSelect, endSelect);
+                after = allText.substring(endSelect, allText.length);
+
+                if (tag === 'img') {
+                    codeOut.value = before + '<' + tag + ' ' + param2 + '="' + param + '" alt="">' + after;
+                }
+                else {
+                    codeOut.value = before + '<' + tag + ' ' + param2 + '="' + param + '">' + selection + '</' + tag + '>' + after;
+                }
+            }
+
+            // Tab en surlignant
+            keyEvent(ev) {
+                switch (ev.keyCode) {
+                    case 9:
+                        ev.preventDefault();
+                        ev.target.value = ev.target.value.substring(0, ev.target.selectionStart) + '  ' + ev.target.value.substring(ev.target.selectionStart, ev.target.value.length);
+                        break;
+                }
+            }
+
+
+            /* ----- Appel aux fonctions d'ajouts ----- */
+
+            bbCode(ev) {
+                this.addBBCode(ev.target.getAttribute("data-tag"), ev.target.getAttribute("data-tag2"));
+            }
+
+            symbol(ev) {
+                this.addSymbol(ev.target.getAttribute("data-tag"));
+            }
+
+            bbCodeImg() {
+                codeOut = this.element.querySelector('.code-out');
+                selection = codeOut.value.substring(codeOut.selectionStart, codeOut.selectionEnd);
+                this.addBBCode2('img', selection, 'src');
+            }
+
+            bbCodeLink() {
+                codeOut = this.element.querySelector('.code-out');
+                selection = codeOut.value.substring(codeOut.selectionStart, codeOut.selectionEnd);
+                this.addBBCode2('a', selection, 'href');
+            }
+
+            bbCodeTitle(ev) {
+                this.addBBCode(ev.target.value, null);
+            }
+
+
+            /* ----- Au clic sur les boutons ----- */
+            
+            clic() {
+
+                // <h1> ou <div class=""></div>
+                let bbCode = this.element.querySelectorAll('.bbtag');
+                for (i = 0; i < bbCode.length; i++) {
+                    bbCode[i].addEventListener('click', this.bbCode.bind(this));
+                }
+
+                // Symboles : “ ” •
+                let bbSymbol = this.element.querySelectorAll('.bbsymbol');
+                for (i = 0; i < bbSymbol.length; i++) {
+                    bbSymbol[i].addEventListener('click', this.symbol.bind(this)); // Dans un écouteur d'événement dans une class, on ne peut pas faire this.symbol() pour appeler la fonction. Il faut ajouter : bind(this). bind() crée une nouvelle fonction qui, lorsqu'elle est appelée, a pour contexte "this" la valeur passée en paramètre et éventuellement une suite d'arguments qui précéderont ceux fournis à l'appel de la fonction créée.
+                }
+
+                this.element.querySelector('.image').addEventListener('click', this.bbCodeImg.bind(this));
+
+                this.element.querySelector('.link').addEventListener('click', this.bbCodeLink.bind(this));
+
+                this.element.querySelector('.title').addEventListener('change', this.bbCodeTitle.bind(this));
+
+                this.element.querySelector('.code-out').addEventListener('keydown', this.keyEvent.bind(this)); // En surlignant, puis touche Tab sur le clavier
+
+            }
+
+        }
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            let bbkeypad1 = document.getElementById("bbkeypad1");
+            let bbkeypad2 = document.getElementById("bbkeypad2");
+
+            if (bbkeypad1) {
+                new BBCode(bbkeypad1); // Seul défaut avec les JS orienté objet, il faut mettre new à chaque fois. Ce qui peut poser problème si leur nombre diffère sur chaque page
+            }
+            if (bbkeypad2) {
+                new BBCode(bbkeypad2);
+            }
+
+        });
+
+        // Compatibilité avec les Classes : Chrome 49 (Mars 2016), Firefox 45 (Juillet 2015), IE / Edge 12 (Mars 2015), Safari 9 (Octobre 2015), Opera 36 (Mars 2016)
+
+    </script>
+</body>
+</html>
