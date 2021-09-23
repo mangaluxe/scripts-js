@@ -81,7 +81,7 @@
 <body>
 
     <main class="main">
-        <h1 class="h1">Calculatrice</h1>
+        <h1 class="h1">Calculatrice (clic & champ input)</h1>
 
         <div class="calculatrice">
             <input type="text" id="input_num">
@@ -120,56 +120,80 @@
             return decimal.replace(/,/g,'.');
         }
 
-        // ----- Au clic sur les boutons -----
+        // ----- Pour éviter plusieurs fois les opérateurs. Fonction pour vérifier dernière entrée -----
 
-        const touches = document.querySelectorAll(".touche");
-        if (touches && inputNum) {
-            for (i = 0; i < touches.length; i++) { // On fait une boucle pour viser toutes les touches de la calculatice
-                touches[i].addEventListener("click", function () {
-                    inputNum.value += this.getAttribute("data-value");
-                });
+        function verifLast() {
+            if ( ((inputNum.value[inputNum.value.length-1]) === "+") || ((inputNum.value[inputNum.value.length-1]) === "-") || ((inputNum.value[inputNum.value.length-1]) === "*") || ((inputNum.value[inputNum.value.length-1]) === "/") || ((inputNum.value[inputNum.value.length-1]) === ".") ) {
+                inputNum.value = inputNum.value.substring(0, inputNum.value.length-1); // Effacer dernier caractère si c'est un opérateur +-*/.
             }
-        }
-
-        // ----- Efface dernière entrée -----
-
-        const erase = document.getElementById("erase");
-        if (erase) {
-            erase.addEventListener("click", function () {
-                inputNum.value = inputNum.value.substring(0, inputNum.value.length-1); // Efface dernier caractère
-            });
         }
 
         // ----- Calcul = -----
 
         function calcul() {
-            let resultat = remplaceVirgule(inputNum.value);
-            let resultat2 = eval(resultat); // eval() permet de calculer, sinon il va afficher 1+1 = 1+1 au lieu 2
+            verifLast(); // Vérifier que le dernier caractère n'est pas un opérateur +-*/
+
+            let resultatBrut = remplaceVirgule(inputNum.value);
+            let resultat = eval(resultatBrut); // eval() permet de calculer, sinon il va afficher 1+1 = 1+1 au lieu 2
 
             // console.log(eval("1.22+1")); // eval() bug sur certains calculs. Exemple: 1.22+1 = 2.2199999999999998
 
             // Afficher résultat du calcul :
-            if (typeof resultat2 !== "undefined") { /* Pour éviter d'afficher undefined quand on clique uniquement sur = */
-                inputNum.value = resultat2;
+            if (typeof resultat !== "undefined") { /* Pour éviter d'afficher undefined quand on clique uniquement sur = */
+                inputNum.value = resultat;
             }
 
             // Afficher résultat dans l'historique
             const calcHistorique = document.getElementById("calc_historique");
 
+            // console.log(resultatBrut);
             // console.log(resultat);
-            // console.log(resultat2);
             
-            if ((resultat != resultat2) && (typeof resultat2 !== "undefined")) { /* Pour éviter d'afficher plusieurs fois dans l'historique quand on reclique sur = */
-                calcHistorique.innerHTML = resultat + " = " + resultat2 + "<br>" + calcHistorique.innerHTML; // Mettre à l'avant
-                // calcHistorique.innerHTML += resultat + " = " + resultat2 + "<br>"; // Mettre à la suite
+            if ((Number(resultatBrut) !== resultat) && (typeof resultat !== "undefined")) { /* Pour éviter d'afficher plusieurs fois dans l'historique quand on reclique sur = */
+                calcHistorique.innerHTML = resultatBrut + " = " + resultat + "<br>" + calcHistorique.innerHTML; // Mettre à l'avant
+                // calcHistorique.innerHTML += resultatBrut + " = " + resultat + "<br>"; // Mettre à la suite
             }
         }
 
         const calc = document.getElementById("calc");
         if (calc) {
             calc.addEventListener("click", calcul); // Clic sur =
+
+            document.addEventListener("keyup", function () { /* Touche Entrer du clavier */
+                if (event.keyCode === 13) {
+                    calcul();
+                }
+            });
         }
 
+        // ----- Au clic sur les boutons -----
+
+        const touches = document.querySelectorAll(".touche");
+        if (touches && inputNum) {
+            for (i = 0; i < touches.length; i++) { // On fait une boucle pour viser toutes les touches de la calculatrice
+                touches[i].addEventListener("click", function () {
+                    let lastTouch = this.getAttribute("data-value");
+
+                    if ((lastTouch === "+") || (lastTouch === "-") || (lastTouch === "*") || (lastTouch === "/") || (lastTouch === ".")) {
+                        verifLast(); // Pour éviter plusieurs fois les opérateurs +-*/.
+                    }
+
+                    inputNum.value += lastTouch;
+                });
+            }
+        }
+
+        // ----- Efface dernière entrée -----
+
+        function eraseLast() {
+            inputNum.value = inputNum.value.substring(0, inputNum.value.length-1); // Efface dernier caractère
+        }
+
+        const erase = document.getElementById("erase");
+        if (erase) {
+            erase.addEventListener("click", eraseLast);
+        }
+        
         // ----- Clear -----
 
         const c = document.getElementById("c");

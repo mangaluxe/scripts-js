@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Convertisseur monnaie</title>
+	<style>
+		* {box-sizing: border-box;}
+        body {
+            font: 1em Verdana, sans-serif;
+            background-color: #c5daf5;
+            padding: 15px;
+        }
+	
+		input[type="text"] {
+            border: 1px solid #4caee2;
+            border-radius: 10px;
+            padding: 9px 12px;
+            font: 1em Verdana, sans-serif;
+			outline: none;
+            margin-top: 8px;
+		}
+
+		#converter input[type="text"] {
+			width: 200px;
+			padding-right: 22px;
+		}
+
+        input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+            font: .9em sans-serif;
+            color: #ddd9d9;
+        }
+        input::-ms-input-placeholder { /* Microsoft Edge */
+            font: .9em sans-serif;
+            color: #ddd9d9;
+        }
+        input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            font: .9em sans-serif;
+            color: #ddd9d9;
+            opacity: 1; /* Firefox */
+        }
+
+		.icon-yen::after,
+		.icon-euro::after {
+			color: #487bc7;
+			position: relative;
+            right: 25px;
+            font: 1em sans-serif;
+		}
+
+		.icon-yen::after {
+			content: "\00A5"; /* ¥ */
+		}
+
+		.icon-euro::after {
+			content: "\20AC"; /* € */
+        }
+
+		.egal {
+			font: 1.5em sans-serif;
+			margin-right: 11px;
+			vertical-align: -2px;
+		}
+	</style>
+</head>
+<body>
+
+	<h1>Convertisseur</h1>
+
+	<p>Taux de change : 1 euro = <span id="taux">130.524</span> ¥</p>
+
+	<form id="converter">
+
+		<label for="yen">
+			<input type="text" id="yen" placeholder="Yen">
+			<span class="icon-yen"></span>
+		</label>
+
+		<span class="egal">=</span>
+
+		<label for="euro">
+			<input type="text" id="euro" placeholder="Euro">
+			<span class="icon-euro"></span>
+		</label>
+
+	</form>
+
+
+	<script>
+
+		const converter = document.getElementById("converter");
+
+		if (converter) {
+
+			let result;
+			let taux = Number(document.getElementById("taux").textContent); // Récup nombre dans un span ou div. On utilise Number(), car la result récupérée est de type chaîne et non de type number
+			
+
+			function convert() {
+
+				let source = this.id;
+				if (source === "yen") {
+					cible = "euro";
+					result = Math.round(100 * parseFloat(converter.elements[source].value) / taux) / 100;
+				}
+				else {
+					cible = "yen";
+					result = Math.round(100 * parseFloat(converter.elements[source].value) * taux) / 100;
+				}
+		
+				if (isNaN(result)) {
+					return false; // Evite le message NaN si on écrit n'importe quoi
+				}
+
+				converter.elements[cible].value = result; // Résultat
+
+			}
+
+			document.getElementById("yen").addEventListener("input", convert);
+			document.getElementById("euro").addEventListener("input", convert);
+			
+		}
+
+	</script>
+
+</body>
+</html>

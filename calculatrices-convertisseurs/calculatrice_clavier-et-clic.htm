@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculatrice</title>
+    <style>
+        * {box-sizing: border-box;}
+        .main {margin: auto;}
+        .h1 {
+            font: bold 24px sans-serif;
+            text-align: center;
+        }
+        p {font: 18px sans-serif;}
+        .center {text-align: center}
+        .inline-block {display: inline-block}
+
+
+
+        .calculatrice {
+            border: 1px solid grey;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #4487be;
+            text-align: center;
+            width: 300px;
+            margin: auto;
+            box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+        }
+        .calculatrice input {
+            border-radius: 5px;
+            padding: 12px;
+            border: none;
+            margin: 8px auto 20px;
+            font: bold 20px sans-serif;
+            width: 256px;
+            outline: none;
+            background-color: #fff;
+            color: #000;
+            box-shadow: 0 4px grey;
+        }
+
+        .keypad-bloc {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .keypad {
+            -webkit-user-select: none; /* Safari 3.1+ */
+            -moz-user-select: none; /* Firefox 2+ */
+            -ms-user-select: none; /* Edge */
+            user-select: none; /* Pour éviter la sélection quand on clique plusieurs fois */
+        }
+        .keypad span {
+            width: 40px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font: bold 1.2em sans-serif;
+            margin: 6px;
+            border: none;
+            box-shadow: 0 4px grey;
+            cursor: pointer;
+            background-color: #ceddee;
+        }
+        .keypad span#calc {
+            background-color: #76aed6;
+        }
+        .keypad span:active { /* Quand on presse une touche */
+            transform: translateY(2px);
+        }
+
+        .calc-historique {
+            font: 20px sans-serif;
+            text-align: center;
+            max-height: 288px;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main">
+        <h1 class="h1">Calculatrice (clic & clavier)</h1>
+
+        <div class="calculatrice">
+            <input type="text" id="input_num" disabled>
+    
+            <div class="keypad-bloc">
+                <div class="keypad inline-block">
+                    <div><span class="touche" data-value="7">7</span><span class="touche" data-value="8">8</span><span class="touche" data-value="9">9</span></div>
+                    <div><span class="touche" data-value="4">4</span><span class="touche" data-value="5">5</span><span class="touche" data-value="6">6</span></div>
+                    <div><span class="touche" data-value="1">1</span><span class="touche" data-value="2">2</span><span class="touche" data-value="3">3</span></div>
+                    <div><span class="touche" data-value="0">0</span><span class="touche" data-value="-">-</span><span class="touche" data-value=".">.</span></div>
+                </div>
+        
+                <div class="keypad inline-block">
+                    <div><span id="erase">←</span><span id="c">c</span></div>
+                    <div><span class="touche" data-value="*">×</span><span class="touche" data-value="/">÷</span></div>
+                    <div><span class="touche" data-value="+">+</span><span class="touche" data-value="-">-</span></div>
+                    <div><span id="calc">=</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="calc-historique">
+            <p>Historique :</p>
+            <div id="calc_historique"></div>
+        </div>
+
+    </main>
+
+    
+    <script>
+
+        let i;
+        const inputNum = document.getElementById("input_num"); // Affichage résultat
+
+
+        // ----- Pour éviter plusieurs fois les opérateurs. Fonction pour vérifier dernière entrée -----
+
+        function verifLast() {
+            if ( ((inputNum.value[inputNum.value.length-1]) === "+") || ((inputNum.value[inputNum.value.length-1]) === "-") || ((inputNum.value[inputNum.value.length-1]) === "*") || ((inputNum.value[inputNum.value.length-1]) === "/") || ((inputNum.value[inputNum.value.length-1]) === ".") ) {
+                inputNum.value = inputNum.value.substring(0, inputNum.value.length-1); // Effacer dernier caractère si c'est un opérateur +-*/.
+            }
+        }
+
+        // ----- Calcul = -----
+
+        function calcul() {
+            verifLast(); // Vérifier que le dernier caractère n'est pas un opérateur +-*/.
+
+            let resultatBrut = inputNum.value;
+            let resultat = eval(resultatBrut); // eval() permet de calculer, sinon il va afficher 1+1 = 1+1 au lieu 2
+
+            // console.log(eval("1.22+1")); // eval() bug sur certains calculs. Exemple: 1.22+1 = 2.2199999999999998
+
+            // Afficher résultat du calcul :
+            if (typeof resultat !== "undefined") { /* Pour éviter d'afficher undefined quand on clique uniquement sur = */
+                inputNum.value = resultat;
+            }
+
+            // Afficher résultat dans l'historique
+            const calcHistorique = document.getElementById("calc_historique");
+
+            // console.log(resultatBrut);
+            // console.log(resultat);
+
+            if ((Number(resultatBrut) !== resultat) && (typeof resultat !== "undefined")) { /* Pour éviter d'afficher plusieurs fois dans l'historique quand on reclique sur = */
+                calcHistorique.innerHTML = resultatBrut + " = " + resultat + "<br>" + calcHistorique.innerHTML; // Mettre à l'avant
+                // calcHistorique.innerHTML += resultat + " = " + resultat + "<br>"; // Mettre à la suite
+            }
+        }
+
+        const calc = document.getElementById("calc");
+        if (calc) {
+            calc.addEventListener("click", calcul); // Clic sur =
+        }
+
+        // ----- Au clic sur les boutons -----
+
+        const touches = document.querySelectorAll(".touche");
+        if (touches && inputNum) {
+            for (i = 0; i < touches.length; i++) { // On fait une boucle pour viser toutes les touches de la calculatrice
+                touches[i].addEventListener("click", function () {
+                    let lastTouch = this.getAttribute("data-value");
+
+                    if ((lastTouch === "+") || (lastTouch === "-") || (lastTouch === "*") || (lastTouch === "/") || (lastTouch === ".")) {
+                        verifLast(); // Pour éviter plusieurs fois les opérateurs +-*/.
+                    }
+
+                    inputNum.value += lastTouch;
+                });
+            }
+        }
+
+        // ----- Efface dernière entrée -----
+
+        function eraseLast() {
+            inputNum.value = inputNum.value.substring(0, inputNum.value.length-1); // Efface dernier caractère
+        }
+
+        const erase = document.getElementById("erase");
+        if (erase) {
+            erase.addEventListener("click", eraseLast);
+        }
+        
+        // ----- Clear -----
+
+        function clear() {
+            inputNum.value = ""; // Vider champ input
+        }
+
+        const c = document.getElementById("c");
+        if (c && inputNum) {
+            c.addEventListener("click", clear);
+        }
+    
+        // ----- Avec clavier -----
+
+        if (inputNum) {
+            document.addEventListener("keyup", function () {
+
+                switch(event.keyCode) {
+                    case 13 : /* 13 = Touche "Entrer" du clavier */
+                        calcul();
+                        break;
+                    
+                    case 96 : /* 0 */
+                        inputNum.value += 0;
+                        break;
+
+                    case 97 : /* 1 */
+                        inputNum.value += 1;
+                        break;
+
+                    case 98 : /* 2 */
+                        inputNum.value += 2;
+                        break;
+
+                    case 99 : /* 3 */
+                        inputNum.value += 3;
+                        break;
+
+                    case 100 : /* 4 */
+                        inputNum.value += 4;
+                        break;
+
+                    case 101 : /* 5 */
+                        inputNum.value += 5;
+                        break;
+
+                    case 102 : /* 6 */
+                        inputNum.value += 6;
+                        break;
+
+                    case 103 : /* 7 */
+                        inputNum.value += 7;
+                        break;
+
+                    case 104 : /* 8 */
+                        inputNum.value += 8;
+                        break;
+
+                    case 105 : /* 9 */
+                        inputNum.value += 9;
+                        break;
+
+                    case 107 : /* + */
+                        verifLast();
+                        inputNum.value += "+";
+                        break;
+
+                    case 109 : /* - */
+                        verifLast();
+                        inputNum.value += "-";
+                        break;
+
+                    case 106 : /* x */
+                        verifLast();
+                        inputNum.value += "*";
+                        break;
+
+                    case 111 : /* ÷ */
+                        verifLast();
+                        inputNum.value += "/";
+                        break;
+
+                    case 8 : /* <- */
+                    eraseLast();
+                    break;
+
+                    case 46 : /* Suppr */
+                    clear();
+                    break;
+                }
+
+            });
+        }
+
+    </script>
+</body>
+</html>

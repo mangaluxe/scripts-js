@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simulateur de prêt / Mensualités</title>
+    <style>
+        body {font: 1em sans-serif}
+        * {box-sizing: border-box}
+        .box {width: 400px}
+        .box-child {display: flex}
+        .question {margin: 15px 0 10px}
+        .bg {background-color: #dddada}
+
+        /* ----- Inputs ----- */
+
+        input {
+            background-color: #fff;
+            border: 1px solid #C4C4C4;
+            padding: 12px 14px;
+            font-size: 1em;
+            width: 100%;
+            color: #333333;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield; /* Retirer les flèches des inputs de type number. Firefox */
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none; /* Chrome */
+            margin: 0;
+        }
+
+        input[type="number"]::-o-inner-spin-button,
+        input[type="number"]::-o-outer-spin-button {
+            -o-appearance: none; /* Opera */
+            margin: 0
+        }
+
+        /* ----- Icônes ----- */
+
+        .symbole {
+            font-size: 1em;
+            color: #333333;
+            background-color: #eee;
+            width: 70px;
+            border: 1px solid #C4C4C4;
+            border-left: 0;
+            border-radius: 0 5px 5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <h1>Simulateur de prêt / Mensualités</h3>
+
+    <div class="box">
+        <div class="question"><label for="prix">Prix du bien :</label></div>
+        <div class="box-child">
+            <input type="text" name="prix" id="prix" min="0">
+            <div class="symbole">€</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question"><label for="notaire">Frais de notaires :</label></div>
+        <div class="box-child">
+            <input type="text" name="notaire" id="notaire" min="0">
+            <div class="symbole">€</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question"><label for="apport">Apport :</label></div>
+        <div class="box-child">
+            <input type="text" name="apport" id="apport" min="0">
+            <div class="symbole">€</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question">Montant à emprunter :</div>
+        <div class="box-child">
+            <input type="text" name="emprunt" id="emprunt" class="bg" disabled>
+            <div class="symbole">€</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question"><label for="taux">Taux d’intérêt :</label></div>
+        <div class="box-child">
+            <input type="text" name="taux" id="taux">
+            <div class="symbole">%</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question"><label for="duree">Durée de votre emprunt (nb de mois) :</label></div>
+        <div class="box-child">
+            <input type="number" name="duree" id="duree" min="1">
+            <div class="symbole">mois</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question">Mensualités :</div>
+        <div class="box-child">
+            <input type="text" name="mensualite" id="mensualite" class="bg" disabled>
+            <div class="symbole">€/mois</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question">Remboursement total :</div>
+        <div class="box-child">
+            <input type="text" name="remboursement" id="remboursement" class="bg" disabled>
+            <div class="symbole">€</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question">Coût total du crédit :</div>
+        <div class="box-child">
+            <input type="text" name="cout" id="cout" class="bg" disabled>
+            <div class="symbole">€</div>
+        </div>
+    </div>
+
+    <br><div id="cout_pourcent_bien"></div>
+
+
+    <script>
+
+        const prix = document.getElementById("prix");
+        const notaire = document.getElementById("notaire");
+        const apport = document.getElementById("apport");
+        const emprunt = document.getElementById("emprunt");
+        const taux = document.getElementById("taux");
+        const duree = document.getElementById("duree");
+        const mensualite = document.getElementById("mensualite");
+        const cout = document.getElementById("cout");
+
+        // Permet d'arrondir et de forcer 2 chiffres après virgule pour les décimales (ex: 12.5 devient 12.50)
+        function arrondiMonnaie(chiffre) {
+            if (Number.isInteger(chiffre)) {
+                return chiffre;
+            }
+            else {
+                return parseFloat(chiffre).toFixed(2);
+            }
+        }
+
+        // ----------- Calcul Mensualités -----------
+
+        function calculMensualite() {
+
+            let valuePrice = prix.value; // Récupère la valeur dans input
+            let valueNotaire = notaire.value;
+            let valueApport = apport.value;
+
+            // 💡 Quand ces trois premiers champs seront remplis :
+            if ( (valuePrice !== "") && (valueNotaire !== "") && (valueApport !== "") ) {
+
+                valuePrice = Number(valuePrice);
+                valueNotaire = Number(valueNotaire);
+                valueApport = Number(valueApport);
+
+                emprunt.value = valuePrice+valueNotaire-valueApport; // 💡 Ecriture dans input : Montant à emprunter
+            }
+
+            let valueEmprunt = emprunt.value;
+            let valueTaux = taux.value;
+            let valueDuree = duree.value;
+
+            // 💡 Quand ces trois champs seront remplis :
+            if ( (valueEmprunt !== "") && (valueTaux !== "") && (valueDuree !== "") ) {
+
+                valueEmprunt = Number(valueEmprunt);
+                valueTaux = Number(valueTaux);
+                valueDuree = Number(valueDuree);
+
+                let m = valueEmprunt*(valueTaux/100)/(1-Math.pow((1+valueTaux/100/12),(-valueDuree)))/12; // Calcul mensualité
+                // mensualite.value = Math.floor(m*100)/100; // Technique pour arrondir à 2 chiffres après virgule (problème pour la monnaie, exemple: 365.5)
+                mensualite.value = arrondiMonnaie(m); // 💡 Ecriture dans <input id="mensualite">
+
+                let r = m*valueDuree;
+                document.getElementById("remboursement").value = arrondiMonnaie(r);  // 💡 Ecriture dans <input id="remboursement">
+
+                let c = r-valueEmprunt;
+                cout.value = arrondiMonnaie(c); // 💡 Ecriture dans <input id="cout">
+
+                let pourcentBien = c*100/Number(valuePrice);
+                document.getElementById("cout_pourcent_bien").innerText = "Soit "+Math.floor(pourcentBien*100)/100+" % de votre bien"; // 💡 Ecriture dans id="cout_pourcent_bien"
+
+            }
+
+        }
+
+        // 💡 En cas de remplissage ou modification des inputs, appel à la fonction calculMensualite() :
+
+        if (prix) {
+            prix.addEventListener("input", calculMensualite);
+        }
+
+        if (notaire) {
+            notaire.addEventListener("input", calculMensualite);
+        }
+
+        if (apport) {
+            apport.addEventListener("input", calculMensualite);
+        }
+
+        if (taux) {
+            taux.addEventListener("input", calculMensualite);
+        }
+
+        if (duree) {
+            duree.addEventListener("input", calculMensualite);
+        }
+    
+    </script>
+
+</body>
+</html>
