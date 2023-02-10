@@ -113,9 +113,12 @@
                 el.querySelector(".dot.active").classList.remove("active"); // Enlève l'ancien point actif. On vise bêtement class="dot active"
 
                 // Update point de navigation actif :
-                let dotIndex = slideIndex-1;
-                if (slideIndex >= nbImg+1) {dotIndex = 0;}
-                if (slideIndex <= 0) {dotIndex = nbImg-1;}
+                // let dotIndex = slideIndex-1;
+                // if (slideIndex >= nbImg+1) {dotIndex = 0;}
+                // if (slideIndex <= 0) {dotIndex = nbImg-1;}
+
+                let dotIndex = (slideIndex - 1 + nbImg) % nbImg; // Equivalent à ci-dessus avec modulo
+
                 dots[dotIndex].classList.add("active"); // Affiche le nouveau point actif
 
                 console.log("slideIndex: " + slideIndex);

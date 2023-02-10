@@ -77,9 +77,11 @@
 
                 // Update point de navigation actif :
                 dots = el.querySelectorAll(".dot"); // On re-sélectionne
+
                 let dotIndex = slideIndex-1;
                 if (slideIndex >= Math.ceil(nbImg/ratio)+1) {dotIndex = 0;}
                 if (slideIndex <= 0) {dotIndex = Math.ceil(nbImg/ratio)-1;}
+
                 dots[dotIndex].classList.add("active"); // Affiche le nouveau point actif
 
                 console.log("slideIndex: " + slideIndex);
