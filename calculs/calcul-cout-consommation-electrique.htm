@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calcul Coût consommation électrique</title>
+    <style>
+        body {font: 1em sans-serif}
+        * {box-sizing: border-box}
+        .box {width: 480px}
+        .box-child {display: flex}
+        .question {margin: 15px 0 10px}
+        .bg {background-color: #dddada}
+
+        input {
+            background-color: #fff;
+            border: 1px solid #C4C4C4;
+            padding: 12px 14px;
+            font-size: 1em;
+            width: 100%;
+            color: #333333;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield; /* Retirer les flèches des inputs de type number. Firefox */
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none; /* Chrome */
+            margin: 0;
+        }
+
+        input[type="number"]::-o-inner-spin-button,
+        input[type="number"]::-o-outer-spin-button {
+            -o-appearance: none; /* Opera */
+            margin: 0
+        }
+
+        .symbole {
+            font-size: 1em;
+            color: #333333;
+            background-color: #eee;
+            width: 70px;
+            border: 1px solid #C4C4C4;
+            border-left: 0;
+            border-radius: 0 5px 5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media screen and (max-width: 600px) {
+            .box {width: 100%}
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Calcul Coût consommation électrique</h3>
+
+    <div class="box">
+        <div class="question"><label for="tarif1">Tarif Consommation Kwh HT (voir facture fournisseur électrique) :</label></div>
+        <div class="box-child">
+            <input type="text" name="tarif1" id="tarif1" min="0" value="0.1374">
+            <div class="symbole">Kw/h</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question"><label for="tarif2">Tarif Taxes Kwh HT (voir facture fournisseur électrique) :</label></div>
+        <div class="box-child">
+            <input type="text" name="tarif2" id="tarif2" min="0" value="0.00568">
+            <div class="symbole">Kw/h</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question"><label for="consommation_appareil">Consommation de l'appareil :</label></div>
+        <div class="box-child">
+            <input type="text" name="consommation_appareil" id="consommation_appareil" min="0">
+            <div class="symbole">W/h</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question">Coût TTC par heure :</div>
+        <div class="box-child">
+            <input type="text" name="cout_heure" id="cout_heure" class="bg" disabled>
+            <div class="symbole">€</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question">Coût TTC par jour :</div>
+        <div class="box-child">
+            <input type="text" name="cout_jour" id="cout_jour" class="bg" disabled>
+            <div class="symbole">€</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="question">Coût TTC par an :</div>
+        <div class="box-child">
+            <input type="text" name="cout_an" id="cout_an" class="bg" disabled>
+            <div class="symbole">€</div>
+        </div>
+    </div>
+
+    <noscript><p>Activez JavaScript dans votre navigateur !</p></noscript>
+
+
+    <script>
+
+        const tarif1 = document.getElementById("tarif1");
+        const tarif2 = document.getElementById("tarif2");
+        const consommationAppareil = document.getElementById("consommation_appareil");
+
+        // Permet d'arrondir et de forcer 2 chiffres après virgule pour les décimales (ex: 12.5 devient 12.50)
+        function arrondiMonnaie(chiffre) {
+            if (Number.isInteger(chiffre)) {
+                return chiffre;
+            }
+            else {
+                return parseFloat(chiffre).toFixed(2);
+            }
+        }
+
+        // Ajouter TVA 20%
+        function ajoutTva(ht) {
+            return ht*1.2;
+        }
+
+
+        function calculCoutConsommation() {
+            let valueTarif = Number(tarif1.value)+Number(tarif2.value); // Récupère valeur dans input
+            // console.log(valueTarif);
+            let valueConsommationAppareil = consommationAppareil.value; // Récupère valeur dans input
+
+            if (valueTarif < 0 || isNaN(valueTarif) || valueConsommationAppareil < 0 || isNaN(valueConsommationAppareil)) { // Vérif erreur
+                document.getElementById("cout_heure").value = "";
+                document.getElementById("cout_jour").value = "";
+                document.getElementById("cout_an").value = "";
+                return;
+            }
+
+            // Si les champs sont remplis :
+            if ( (valueTarif !== "") && (valueConsommationAppareil !== "") ) {
+                document.getElementById("cout_heure").value = ajoutTva(valueConsommationAppareil*valueTarif/1000);
+                document.getElementById("cout_jour").value = arrondiMonnaie(ajoutTva(valueConsommationAppareil*(valueTarif/1000)*24));
+                document.getElementById("cout_an").value = arrondiMonnaie(ajoutTva(valueConsommationAppareil*(valueTarif/1000)*24*365));
+            }
+        }
+
+
+        if (tarif1 && tarif2 && consommationAppareil) {
+            tarif1.addEventListener("input", calculCoutConsommation); // 💡 En cas de remplissage ou modification des inputs, appel à la fonction calculCoutConsommation()
+            tarif2.addEventListener("input", calculCoutConsommation);
+            consommationAppareil.addEventListener("input", calculCoutConsommation);
+        }
+
+    </script>
+
+</body>
+</html>

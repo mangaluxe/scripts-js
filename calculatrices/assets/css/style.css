@@ -1,0 +1,205 @@
+* {box-sizing: border-box;}
+body {
+    margin: 0;
+    padding: 0;
+    font: 1em sans-serif;
+    background-color: #252629;
+    color: #F1F2EA;
+}
+.main {margin: auto;}
+.center {text-align: center;}
+.invisible {visibility: hidden;}
+.block {display: block;}
+.hidden {display: none;}
+.mx-2 {margin-left: 20px; margin-right: 20px;}
+
+/* ----- Input type radio avec Switch ----- */
+
+.radio-box {
+    display: flex;
+    margin-bottom: 17px;
+    overflow: hidden;
+    user-select: none;
+}
+
+.radio-box label {
+    overflow: hidden;
+}
+.radio-box label:first-of-type {
+    border-radius: 5px 0 0 5px;
+}
+.radio-box label:last-of-type {
+    border-radius: 0 5px 5px 0;
+}
+
+.radio-box input { /* On cache l'input de type radio */
+    display: none;
+}
+
+.radio-box .checkmark { /* On décore un <span class="checkmark">, et non le radio */
+    display: inline-block;
+    background-color: #cccccc;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.8em;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+.radio-box .checkmark:first-of-type {
+    margin-right: -1px; /* Effacer l'ombre en trop entre les 2 blocs */
+}
+.radio-box .checkmark:last-of-type {
+    margin-left: -1px; /* Effacer l'ombre en trop entre les 2 blocs */
+}
+
+.radio-box input:checked + .checkmark {
+    background-color: #19476d;
+    color: white;
+}
+
+/* ----- Calculatrice ----- */
+
+.calculatrice {
+    padding: 15px;
+    background-color: #252629;
+    text-align: center;
+    width: 100%;
+    margin: auto;
+}
+
+.calc-screen,
+.calc-screen-soldes-1,
+.calc-screen-soldes-2 {
+    border-radius: 5px;
+    text-align: right;
+    padding: 12px;
+    border: none;
+    width: 100%;
+    outline: none;
+    background-color: #cccccc;
+    color: #000;
+    font-weight: 500;
+    font-family: sans-serif;
+}
+
+.calc-screen {
+    font-size: 6vw;
+    height: 24vw;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: right;
+    position: relative;
+}
+
+.calc-screen-soldes-1 {
+    font-size: 6vw;
+    margin-bottom: 20px;
+    height: 11vw;
+    display: flex;
+    justify-content: right;
+}
+
+.calc-screen-soldes-2 {
+    font-size: 5vw;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.calc-hist {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 3vw;
+    opacity: 0.5;
+}
+
+.calc-screen > .calc-out {
+    align-self: flex-end;
+}
+.calc-screen-soldes-1 > .calc-out {
+    align-self: center;
+}
+
+.calc-title {
+    text-align: center;
+    color: #f1f5f8;
+    margin-top: 5px;
+}
+
+.calc-key {
+    user-select: none; /* Pour éviter la sélection quand on clique plusieurs fois */
+
+    display: flex;
+    justify-content: center;
+    margin-left: -5px;
+    margin-right: -5px;
+}
+.calc-key > div {
+    width: 20%;
+    aspect-ratio: 3/2;
+    margin: 5px;
+    padding: 8px;
+    border-radius: 5px;
+    font: 500 6vw sans-serif;
+    border: none;
+
+    /* Juste pour centrer nombre : */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.calc-key > div:hover {
+    cursor: pointer;
+}
+.calc-key > div:active { /* Quand on presse une touche */
+    transform: translateY(2px);
+}
+
+.t1 {background-color: #3D4043;}
+.t2 {background-color: #64696F;}
+.t3 {background-color: #7d7d7e;}
+
+
+
+/* ____________________ Bureau ____________________ */
+
+@media screen and (min-width: 900px) {
+
+    body {background-color: #777a84;}
+
+    .calculatrice {
+        border: 1px solid grey;
+        max-width: 700px;
+        margin-top: 50px;
+    }
+
+    .calc-screen {
+        height: 19vw;
+    }
+
+    .calc-screen,
+    .calc-key > div {
+        font-size: 3vw;
+    }
+
+    .calc-screen-soldes-1 {
+        font-size: 3vw;
+        height: 6vw;
+    }
+    
+    .calc-screen-soldes-2 {
+        font-size: 2vw;
+    }
+
+}
+
+
+@media screen and (min-width: 1600px) {
+    .calc-screen {
+        height: 16vw;
+    }
+
+    .calc-screen,
+    .calc-key > div {
+        font-size: 3vw;
+    }
+}

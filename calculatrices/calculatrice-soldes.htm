@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculatrice Soldes</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" href="assets/img/soldes.png" type="image/png" sizes="512x512">
+</head>
+<body>
+
+    <main class="main">
+
+        <div class="calculatrice">
+            <h1 class="calc-title">Calculatrice Soldes</h1>
+
+            <div class="calc-screen-soldes-1">
+                <span class="calc-out"></span>
+            </div>
+
+            <div class="radio-box">
+                <label for="soldes">
+                    <input type="radio" id="soldes" name="calc-type" value="soldes" checked>
+                    <span class="checkmark">Soldes</span>
+                </label>
+                <label for="initial">
+                    <input type="radio" id="initial" name="calc-type"  value="initial">
+                    <span class="checkmark">Prix initial</span>
+                </label>
+            </div>
+    
+            <div class="calc-key">
+                <div class="key t1">7</div>
+                <div class="key t1">8</div>
+                <div class="key t1">9</div>
+                <div id="erase" class="t2">←</div>
+                <div id="c" class="t2">c</div>
+            </div>
+            <div class="calc-key">
+                <div class="key t1">4</div>
+                <div class="key t1">5</div>
+                <div class="key t1">6</div>
+                <div class="t1 invisible"></div>
+                <div class="t1 invisible"></div>
+            </div>
+            <div class="calc-key">
+                <div class="key t1">1</div>
+                <div class="key t1">2</div>
+                <div class="key t1">3</div>
+                <div class="t1 invisible"></div>
+                <div class="t1 invisible"></div>
+            </div>
+            <div class="calc-key">
+                <div class="key t1">0</div>
+                <div class="key t1">.</div>
+                <div class="t1 invisible"></div>
+                <div class="t1 invisible"></div>
+                <div class="t1 invisible"></div>
+            </div>
+
+            <div class="calc-screen-soldes-2">
+                <div class="invisible">
+                    <div class="hidden" id="calc_type_text">Prix d'origine si :</div>
+                    <div>
+                        -10% = <span id="output10"></span><br>
+                        -20% = <span id="output20"></span><br>
+                        -30% = <span id="output30"></span><br>
+                        -40% = <span id="output40"></span><br>
+                        -50% = <span id="output50"></span><br>
+                        -60% = <span id="output60"></span><br>
+                        -70% = <span id="output70"></span><br>
+                        -80% = <span id="output80"></span><br>
+                        -90% = <span id="output90"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <noscript><p>Activez JavaScript dans votre navigateur !</p></noscript>
+    
+    </main>
+
+
+    <script src="assets/js/soldes.js"></script>
+
+</body>
+</html>

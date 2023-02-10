@@ -85,6 +85,8 @@
 
 	</form>
 
+	<noscript><p>Activez JavaScript dans votre navigateur !</p></noscript>
+
 
 	<script>
 
@@ -94,7 +96,7 @@
 
 			let result;
 			let taux = Number(document.getElementById("taux").textContent); // Récup nombre dans un span ou div. On utilise Number(), car la result récupérée est de type chaîne et non de type number
-			
+
 
 			function convert() {
 
@@ -118,7 +120,7 @@
 
 			document.getElementById("yen").addEventListener("input", convert);
 			document.getElementById("euro").addEventListener("input", convert);
-			
+
 		}
 
 	</script>

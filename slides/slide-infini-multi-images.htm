@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Slide infini (Diapositive)</title>
+    <link rel="stylesheet" href="assets/css/style-slide-multi-infini.css">
+</head>
+<body>
+
+    <h1 class="center">Slide responsive et infini</h1>
+
+    <div class="slide-container"> <!-- position:relative (les positions absolute sont placées par rapport à lui). Avec overflow-x:hidden, on n'affiche qu'une image, on cache les images qui dépassent -->
+
+        <div class="slide"> <!-- Utilise translateX pour afficher qu'une image -->
+            <div class="item"><a href="#1"><img src="assets/img/1.jpg" alt=""><span>1. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates, accusamus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum.</span></a></div>
+            <div class="item"><a href="#2"><img src="assets/img/2.jpg" alt=""><span>2. Lorem ipsum dolor sit, amet consectetur.</span></a></div>
+            <div class="item"><a href="#3"><img src="assets/img/3.jpg" alt=""><span>3. Lorem ipsum dolor sit, amet consectetur adipisicing elit.</span></a></div>
+            <div class="item"><a href="#4"><img src="assets/img/4.jpg" alt=""><span>4. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates, accusamus.</span></a></div>
+            <div class="item"><a href="#5"><img src="assets/img/5.jpg" alt=""><span>5. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates.</span></a></div>
+            <div class="item"><a href="#6"><img src="assets/img/6.jpg" alt=""><span>6. Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde molestias numquam laudantium! Quibusdam, voluptates ducimus.</span></a></div>
+        </div>
+
+        <a class="slide-left">&#10094;</a>
+        <a class="slide-right">&#10095;</a>
+
+        <div class="dot-container"></div>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="slide-container">
+
+        <div class="slide">
+            <div class="item"><a href="#1"><img src="assets/img/1.jpg" alt=""><span>1. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ratione eveniet error qui.</span></a></div>
+            <div class="item"><a href="#2"><img src="assets/img/2.jpg" alt=""><span>2. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat est officiis explicabo. Nisi cumque esse explicabo.</span></a></div>
+            <div class="item"><a href="#3"><img src="assets/img/3.jpg" alt=""><span>3. Lorem, ipsum dolor sit amet consectetur adipisicing elit.</span></a></div>
+            <div class="item"><a href="#4"><img src="assets/img/4.jpg" alt=""><span>4. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor autem error natus, delectus quibusdam iusto.</span></a></div>
+            <div class="item"><a href="#5"><img src="assets/img/5.jpg" alt=""><span>5. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odit veritatis doloremque quam aut.</span></a></div>
+            <div class="item"><a href="#6"><img src="assets/img/6.jpg" alt=""><span>6. Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde molestias numquam laudantium! Quibusdam, voluptates ducimus.</span></a></div>
+        </div>
+
+        <a class="slide-left">&#10094;</a>
+        <a class="slide-right">&#10095;</a>
+
+        <div class="dot-container"></div>
+
+    </div>
+
+
+
+    <script>
+        "use strict";
+
+        let i, j, clone;
+
+
+        function slider(el, nb = 2) {
+
+            let ratio;
+            let slideIndex = 1;
+            let slide = el.querySelector(".slide");
+            let slideIn = el.querySelectorAll(".slide > div");
+            let dots = el.querySelectorAll(".dot");
+            let nbImg = slideIn.length; // Nombre d'images
+
+
+            // ========== Update images et point de navigation actif ==========
+
+            function slideGoto(n) {
+                slide.style.transform = "translateX(-" + slideIndex * 100 + "%)"; // On utilise la technique du translateX pour changer d'images
+
+                el.querySelector(".dot.active").classList.remove("active"); // Enlève l'ancien point actif. On vise bêtement class="dot active"
+
+                // Update point de navigation actif :
+                dots = el.querySelectorAll(".dot"); // On re-sélectionne
+                let dotIndex = slideIndex-1;
+                if (slideIndex >= Math.ceil(nbImg/ratio)+1) {dotIndex = 0;}
+                if (slideIndex <= 0) {dotIndex = Math.ceil(nbImg/ratio)-1;}
+                dots[dotIndex].classList.add("active"); // Affiche le nouveau point actif
+
+                console.log("slideIndex: " + slideIndex);
+            }
+
+
+            // ========== Au clic sur les flèches ==========
+
+            function slidePrev() { // -1 à l'index
+
+                // console.log("Ratio: " + ratio);
+
+                if (slideIndex <= 1) {
+                    slideIndex = Math.ceil(nbImg/ratio)+1;
+                    slide.style.transition = "none";
+                    slideGoto(slideIndex);
+                }
+
+                setTimeout(function () { // On met un setTimeout() pour que ce code s'exécute après ce qu'il y a au dessus
+                    slideIndex--;
+                    slide.style.transition = "all 0.5s";
+                    slideGoto(slideIndex);
+                }, 50);
+
+            }
+
+            function slideNext() { // +1 à l'index
+
+                // console.log("Ratio: " + ratio);
+
+                if (slideIndex >= Math.ceil(nbImg/ratio)) {
+                    slideIndex = 0;
+                    slide.style.transition = "none";
+                    slideGoto(slideIndex);
+                }
+
+                setTimeout(function () {
+                    slideIndex++;
+                    slide.style.transition = "all 0.5s";
+                    slideGoto(slideIndex);
+                }, 50);
+
+            }
+
+            el.querySelector(".slide-left").addEventListener("click", slidePrev); // Ecouteurs d'événements sur flèche gauche
+            el.querySelector(".slide-right").addEventListener("click", slideNext); // Ecouteurs d'événements sur flèche droite
+
+
+            // ========== Auto (Mettre ci-dessous en commentaire si on ne veut pas) ==========
+
+            // setInterval(slideNext, 3000); // Appel à la fonction slideNext() toutes x millisecondes dès le chargement
+
+
+            // ========== Au clic sur les points ==========
+
+            /* Pour savoir sur quel point on a cliqué */
+            function currentSlide(e) {
+                slideIndex = parseInt(e.target.getAttribute("data-target"), 10); // Recup du numéro d'index au clic. "data-target" qu'on récupère dans le html est une chaîne. parseInt() la convertit en nombre entier
+
+                let dotIndex = (slideIndex-1 + nbImg) % nbImg;
+
+                slideGoto(dotIndex+1); // Appel à la fonction pour mettre à jour l'image et le point actif
+            }
+
+            /* Mettre écouteurs d'événements sur les points */
+            function eventDot() { /* Fonction appelée dans la fonction onWindowResize(), qui est appelée au chargement de la page */
+                for (i = 0; i < dots.length; i++) {
+                    dots[i].addEventListener("click", currentSlide);
+                }
+            }
+
+
+            // ========== Glisser au doigt sur écran tactile ==========
+
+            let startX = 0;
+            let endX = 0;
+
+            function dragEnd(e) {
+                e = e || window.event; // window.event pour ancienne version d'IE
+
+                if (e.changedTouches) { /* Avec touchstart (tactile) */
+                    endX = e.changedTouches[0].screenX;
+                }
+                else { /* Avec mousedown (souris) */
+                    endX = e.screenX;
+                }
+
+                let diff = startX / endX;
+                // console.log(diff);
+                if (diff > 0.97 && diff < 1.03) { /* Ignorer petit mouvement */
+                    return; // Met fin à la fonction
+                }
+
+                if (endX < startX) {
+                    slideNext(); // Appel à cette fonction
+                }
+                
+                else if (endX > startX) {
+                    slidePrev(); // Appel à cette fonction
+                }
+            }
+
+            function dragStart(e) {
+                e = e || window.event; // window.event pour ancienne version d'IE
+
+                if (e.changedTouches) { /* Avec touchstart (tactile) */
+                    startX = e.changedTouches[0].screenX;
+                }
+                else { /* Avec mousedown (souris) */
+                    e.preventDefault(); // Annule l'interdiction de drag. Attention ⚠ : rend les liens incliquables sur écrans tactiles. Ne pas mettre pour écrans tactiles !
+
+                    startX = e.screenX;
+                }
+
+                slide.onmouseup = dragEnd;
+            }
+
+            slide.addEventListener("touchstart", dragStart); // Quand on touche l'écran tactile
+            slide.addEventListener("mousedown", dragStart); // Quand on clique
+
+            slide.addEventListener("touchend", dragEnd);
+            // slide.addEventListener("mouseup", dragEnd); // Pas besoin, car on a déjà mis "slide.onmouseup = dragEnd" dans la fonction dragStart
+            
+
+            // ========== Redimensionnement de la fenêtre et création d'éléments ==========
+
+            let maxx = window.matchMedia("(max-width: 800px)"); // Largeur qui déclenche le changement d'état
+
+            function onWindowResize() {
+                // if (window.innerWidth < 800) { /* Marche aussi, mais le code est exécuté à chaque fois qu'on redimensionne. Avec matchMedia(), le code JS n'est exécuté que quand on change d'état : */
+                if (maxx.matches) { // Si Media Querie correspond
+                    ratio = 1; // Mobile
+                }
+                else {
+                    ratio = nb; // Bureau
+                }
+
+                /* --- Nombre d'images visibles --- */
+
+                for (i = 0; i < slideIn.length; i+=1) {
+                    slideIn[i].style.width = (100/ratio)+"%"; // Il n'est pas possible d'appliquer style sur plusieurs éléments en JS en même temps, on fait donc une boucle
+                }
+
+                /* --- Clonage au chargement (pour créer un slide infini) --- */
+
+                // let oldClones = document.querySelectorAll('.clone');
+                // oldClones.forEach(function(el) { // On supprime d'abord les éventuels anciens clones
+                //     el.remove();
+                // }); // Problème : supprime aussi les clones qui viennent d'être créés
+
+                for (i = ratio; i >= 1; i--) {
+                    clone = slideIn[nbImg - i].cloneNode(true);
+                    clone.classList.add("clone"); // Ajout d'une class="clone" pour identifier les clones
+                    slide.insertBefore(clone, slideIn[0]); // On clone les dernières images et on insère au début
+                }
+
+                for (i = 0; i <= ratio-1; i++) {
+                    clone = slideIn[i].cloneNode(true);
+                    clone.classList.add("clone"); // Ajout d'une class="clone" pour identifier les clones
+                    slide.appendChild(clone); // On clone les premières images et on insère à la fin
+                }
+
+                /* --- Suppresion d'éventuels anciens éléments avant la création d'éléments (points) --- */
+
+                const dotContainer = el.querySelector(".dot-container");
+                while (dotContainer.hasChildNodes()) {
+                    dotContainer.removeChild(dotContainer.firstChild);
+                }
+
+                /* --- Création d'éléments (points) ---
+
+                On a : <div class="dot-container"></div>
+
+                On veut obtenir :
+                <div class="dot-container">
+                    <span class="dot active" data-target="1"></span>
+                    <span class="dot" data-target="2"></span>
+                    <span class="dot" data-target="3"></span>
+                    <span class="dot" data-target="4"></span>
+                    <span class="dot" data-target="5"></span>
+                </div>
+                */
+
+                console.log("Nombre de pages : " + slideIn.length/ratio);
+
+                for (i = 0; i < slideIn.length/ratio; i++) {
+                    var node = document.createElement("span"); // On crée un élément <span>
+                    if (i === 0) {node.setAttribute("class", "dot active");} else {node.setAttribute('class', 'dot');} // On lui donne la class="dot"
+                    node.setAttribute("data-target", i+1); // On lui donne l'attribut data-target="i+1". On doit décaler de 1 à cause de l'image clonée
+                    el.querySelector(".dot-container").appendChild(node); // On colle dans <div class="dot-container"> comme un enfant                   
+                }
+
+                slideIndex = 1; // Initialisation de l'image au chargement et au changement d'état. Image index 1 par défaut (pas 0 à cause du clone)
+                slideGoto(slideIndex);
+
+                eventDot(); // Appel à cette fonction au chargement
+            }
+
+
+            onWindowResize(); // Appel à la fonction au chargement
+            maxx.addEventListener("change", onWindowResize); // Ecouteur d'événement sur changement d'état
+
+        }
+
+
+        const slideContainers = document.querySelectorAll(".slide-container");
+        if (slideContainers[0]) {
+            slider(slideContainers[0], 2); // Appel à la fonction slider() au chargement avec paramètre slideContainers[0] et nb d'images visibles
+        }
+        if (slideContainers[1]) {
+            slider(slideContainers[1], 3); // Appel à la fonction slider() au chargement avec paramètre slideContainers[1] et nb d'images visibles
+        }
+
+    </script>
+
+</body>
+</html>

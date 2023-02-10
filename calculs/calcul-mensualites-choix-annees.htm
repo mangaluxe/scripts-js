@@ -89,6 +89,9 @@
             right: 90px;
         }
 
+        @media screen and (max-width: 600px) {
+            .box {width: 100%}
+        }
     </style>
 </head>
 <body>
@@ -148,6 +151,8 @@
 
     <br><div id="cout_pourcent_bien"></div>
 
+    <noscript><p>Activez JavaScript dans votre navigateur !</p></noscript>
+
 
     <script>
 
@@ -200,17 +205,10 @@
 
         }
 
-        // En cas de remplissage ou modification des inputs, appel à la fonction calculMensualite() :
 
-        if (emprunt) {
-            emprunt.addEventListener("input", calculMensualite);
-        }
-
-        if (taux) {
+        if (emprunt && taux && duree) {
+            emprunt.addEventListener("input", calculMensualite); // 💡 En cas de remplissage ou modification des inputs, appel à la fonction calculMensualite()
             taux.addEventListener("input", calculMensualite);
-        }
-
-        if (duree) {
             duree.addEventListener("input", calculMensualite);
         }
 

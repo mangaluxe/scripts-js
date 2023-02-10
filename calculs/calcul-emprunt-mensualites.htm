@@ -12,8 +12,6 @@
         .question {margin: 15px 0 10px}
         .bg {background-color: #dddada}
 
-        /* ----- Inputs ----- */
-
         input {
             background-color: #fff;
             border: 1px solid #C4C4C4;
@@ -40,8 +38,6 @@
             margin: 0
         }
 
-        /* ----- Icônes ----- */
-
         .symbole {
             font-size: 1em;
             color: #333333;
@@ -55,6 +51,9 @@
             align-items: center;
         }
 
+        @media screen and (max-width: 600px) {
+            .box {width: 100%}
+        }
     </style>
 </head>
 <body>
@@ -135,6 +134,8 @@
 
     <br><div id="cout_pourcent_bien"></div>
 
+    <noscript><p>Activez JavaScript dans votre navigateur !</p></noscript>
+
 
     <script>
 
@@ -203,25 +204,11 @@
 
         }
 
-        // 💡 En cas de remplissage ou modification des inputs, appel à la fonction calculMensualite() :
-
-        if (prix) {
-            prix.addEventListener("input", calculMensualite);
-        }
-
-        if (notaire) {
+        if (prix && notaire && apport && taux && duree) {
+            prix.addEventListener("input", calculMensualite); // 💡 En cas de remplissage ou modification des inputs, appel à la fonction calculMensualite()
             notaire.addEventListener("input", calculMensualite);
-        }
-
-        if (apport) {
             apport.addEventListener("input", calculMensualite);
-        }
-
-        if (taux) {
             taux.addEventListener("input", calculMensualite);
-        }
-
-        if (duree) {
             duree.addEventListener("input", calculMensualite);
         }
     

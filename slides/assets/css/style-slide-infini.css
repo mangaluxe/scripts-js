@@ -1,0 +1,125 @@
+body {
+    margin: 0;
+    font-size: .9em;
+}
+* {box-sizing: border-box}
+h1 {text-align: center;}
+
+/* ========== Slide (Diapositive) ========== */
+
+/* ----- Images ----- */
+
+.slide-container {
+    max-width: 600px; /* On peut diminuer la taille, car les images sont responsives */
+    margin: auto;
+    position: relative; /* Les positions absolutes sont placées par rapport à cette div */
+    overflow-x: hidden; /* Pour que translateX n'affiche qu'une image, on cache les images qui dépassent */
+}
+
+.slide {
+    white-space: nowrap; /* Sans cela, les blocs passent à la ligne */
+    transform: translateX(-100%); /* -100% par défaut au lieu de 0 à cause du clone */
+    transition: transform .4s;
+
+    font-size: 0; /* Corriger problème d'espace entre div inline */
+}
+
+.slide > div {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    /* padding: 10px; */
+
+    font-size: 1rem;
+}
+
+.slide img {
+    width: 100%; /* Images responsives */
+    height: auto;
+    /* box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, .2); */
+    /* border-radius: 8px; */
+
+    /* Résoud problème de hauteur avec le texte : */
+    /* vertical-align: middle; */
+}
+
+.slide span {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    /* width: calc(100% - 20px); */
+    width: 100%;
+    padding: 10px;
+    /* margin: 10px; */
+    /* border-radius: 0 0 8px 8px; */
+    background-color: rgba(0, 0, 0, .6);
+    color: white;
+    font: 1em sans-serif;
+    white-space: normal; /* Remettre par défaut */
+}
+
+/* ----- Flèches ❮ ❯ ----- */
+
+.slide-left,
+.slide-right {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 15px;
+    margin-top: -41px;
+    color: white; /* Flèches blanches */
+    text-shadow: 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000, 0 0 1px #000; /* Contour noir autour des flèches blanches */
+    user-select: none;
+    transition: .6s ease;
+}
+.slide-left {
+    left: 10px;
+    border-radius: 0 3px 3px 0;
+}
+.slide-right {
+    right: 10px; /* Positionner bouton flèche à droite */
+    border-radius: 3px 0 0 3px;
+}
+
+/* ----- Petits points indicateurs ----- */
+
+.dot-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color .6s ease;
+}
+.dot.active {
+    background-color: #717171;
+}
+
+
+@media screen and (min-width: 1025px) { /* Uniquement sur ordinateur de bureau */
+    /* .slide > div:hover {
+        transform: translateY(-3px);
+    } */
+
+    .slide img:hover {
+        box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, .2);
+    }
+    
+    .slide-left:hover,
+    .slide-right:hover {
+        background-color: rgba(0, 0, 0, .7);
+    }
+
+    .dot:hover {
+        background-color: #717171; /* On évite :hover sur mobile et tablette, car le :hover reste tout le temps au même endroit tant qu'on ne clique pas ailleurs */
+    }
+}
