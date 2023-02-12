@@ -162,16 +162,21 @@
             function dragEnd(e) {
                 e = e || window.event; // window.event pour ancienne version d'IE
 
-                if (e.changedTouches) { /* Avec touchstart (tactile) */
-                    endX = e.changedTouches[0].screenX;
-                }
-                else { /* Avec mousedown (souris) */
-                    endX = e.screenX;
-                }
+                // if (e.changedTouches) { /* Avec touchstart (tactile) */
+                //     endX = e.changedTouches[0].screenX;
+                // }
+                // else { /* Avec mousedown (souris) */
+                //     endX = e.screenX;
+                // }
 
+                // Détection du type d'événement (touchend ou mouseup) :
+                let eventType = e.changedTouches ? "touchend" : "mouseup";
+                endX = eventType === "touchend" ? e.changedTouches[0].screenX : e.screenX;
+
+                // Ignorer petit mouvement :
                 let diff = startX / endX;
                 // console.log(diff);
-                if (diff > 0.97 && diff < 1.03) { /* Ignorer petit mouvement */
+                if (diff > 0.97 && diff < 1.03) {
                     return; // Met fin à la fonction
                 }
 
@@ -187,23 +192,30 @@
             function dragStart(e) {
                 e = e || window.event; // window.event pour ancienne version d'IE
 
-                if (e.changedTouches) { /* Avec touchstart (tactile) */
-                    startX = e.changedTouches[0].screenX;
-                }
-                else { /* Avec mousedown (souris) */
-                    e.preventDefault(); // Annule l'interdiction de drag. Attention ⚠ : rend les liens incliquables sur écrans tactiles. Ne pas mettre pour écrans tactiles !
+                // if (e.changedTouches) { /* Avec touchstart (tactile) */
+                //     startX = e.changedTouches[0].screenX;
+                // }
+                // else { /* Avec mousedown (souris) */
+                //     e.preventDefault(); // Annule l'interdiction de drag. Attention ⚠ : rend les liens incliquables sur écrans tactiles. Ne pas mettre pour écrans tactiles !
 
-                    startX = e.screenX;
-                }
+                //     startX = e.screenX;
+                // }
 
-                slide.onmouseup = dragEnd;
+                // Détection du type d'événement (touchstart ou mousedown) :
+                let eventType = e.changedTouches ? "touchstart" : "mousedown";
+                if (eventType === "mousedown") {
+                    e.preventDefault();
+                }
+                startX = (eventType === "touchstart") ? e.changedTouches[0].screenX : e.screenX;
+
+                slide.addEventListener("mouseup", dragEnd);
             }
 
             slide.addEventListener("touchstart", dragStart); // Quand on touche l'écran tactile
             slide.addEventListener("mousedown", dragStart); // Quand on clique
 
             slide.addEventListener("touchend", dragEnd);
-            // slide.addEventListener("mouseup", dragEnd); // Pas besoin, car on a déjà mis "slide.onmouseup = dragEnd" dans la fonction dragStart
+            // slide.addEventListener("mouseup", dragEnd); // Pas besoin, car on a déjà mis ça dans la fonction dragStart
             
 
             // ========== Redimensionnement de la fenêtre et création d'éléments ==========
